@@ -1,4 +1,5 @@
 import { FormEvent, useRef, useState } from 'react';
+import Arrow from './assets/arrow.png';
 import InputField from './components/InputField';
 import BookmarkBox from './components/BookmarkBox';
 
@@ -44,7 +45,7 @@ function App() {
 
   return (
     <div className="w-full h-screen bg-gradient-to-tr from-gray-950 to-slate-800 flex items-center justify-center flex-col gap-10 py-5 px-5">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 relative">
         <h1 className="text-3xl text-white font-bold">Link Bookmark</h1>
         <div
           onClick={() => {
@@ -67,6 +68,11 @@ function App() {
             />
           </svg>
         </div>
+        <img
+          src={Arrow}
+          alt="arrow"
+          className="absolute w-12 invert rotate-180 -right-12 -top-8"
+        />
       </div>
       <div className="w-full max-w-5xl h-[600px] rounded-md bg-gradient-to-br from-gray-900 to-slate-950 p-5 flex gap-4 flex-wrap overflow-y-scroll scrollbar">
         {links.map((link, i) => {
