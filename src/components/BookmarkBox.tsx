@@ -1,4 +1,4 @@
-import { LinkType } from '../App';
+import { LinkType } from '../pages/Main';
 
 type Props = {
   link: LinkType;
