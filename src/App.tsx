@@ -1,5 +1,6 @@
 import { FormEvent, useRef, useState } from 'react';
 import InputField from './components/InputField';
+import BookmarkBox from './components/BookmarkBox';
 
 const initialLink = [
   {
@@ -11,6 +12,8 @@ const initialLink = [
     url: 'www.google.com',
   },
 ];
+
+export type LinkType = (typeof initialLink)[0];
 
 function App() {
   const [links, setLinks] = useState(initialLink);
@@ -35,7 +38,6 @@ function App() {
     });
   };
 
-  console.log(links);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -43,7 +45,7 @@ function App() {
   return (
     <div className="w-full h-screen bg-gradient-to-tr from-gray-950 to-slate-800 flex items-center justify-center flex-col gap-10 py-5 px-5">
       <div className="flex items-center gap-4">
-        <h1 className="text-3xl text-white font-bold">Save Links</h1>
+        <h1 className="text-3xl text-white font-bold">Link Bookmark</h1>
         <div
           onClick={() => {
             dialogRef.current?.showModal();
@@ -54,13 +56,13 @@ function App() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
             className="w-5 h-5"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
@@ -71,23 +73,7 @@ function App() {
           let url = link.url.startsWith('http')
             ? link.url
             : `http://${link.url}`;
-          return (
-            <a
-              href={url}
-              key={`${i}-${link.url}`}
-              target="_blank"
-              className="w-max space-y-2 flex flex-col items-center h-max"
-            >
-              <div className="folder w-[60px] h-[60px] shadow-md border border-gray-800 hover:border-gray-700 rounded-lg flex items-center justify-center">
-                <img
-                  src={`https://www.google.com/s2/favicons?sz=32&domain_url=${link.url}`}
-                  alt="fav"
-                  className=""
-                />
-              </div>
-              <p className="text-[13px] text-center text-white">{link.title}</p>
-            </a>
-          );
+          return <BookmarkBox key={`${i}-${link.url}`} link={link} url={url} />;
         })}
       </div>
 
@@ -108,13 +94,13 @@ function App() {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
             className="w-5 h-5"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
