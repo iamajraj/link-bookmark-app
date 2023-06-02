@@ -6,9 +6,17 @@ type Props = {
   span?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
+  value?: string;
 };
 
-function InputField({ onChange, name, placeholder, title, span }: Props) {
+function InputField({
+  onChange,
+  name,
+  placeholder,
+  title,
+  span,
+  value,
+}: Props) {
   return (
     <div className="flex flex-col gap-2">
       <label className="text-white">
@@ -18,6 +26,7 @@ function InputField({ onChange, name, placeholder, title, span }: Props) {
       <input
         onChange={onChange}
         name={name}
+        value={value}
         type="text"
         className="rounded-md py-2 px-2 outline-none border-none"
         placeholder={placeholder}
