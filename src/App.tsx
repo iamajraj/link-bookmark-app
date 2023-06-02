@@ -1,14 +1,16 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Arrow from './assets/arrow.png';
 import InputField from './components/InputField';
 import BookmarkBox from './components/BookmarkBox';
 
 const initialLink = [
   {
+    id: '1',
     title: 'Youtube',
     url: 'www.youtube.com',
   },
   {
+    id: '2',
     title: 'Google',
     url: 'www.google.com',
   },
@@ -30,7 +32,14 @@ function App() {
     if (addData.title.trim() === '' || addData.url.trim() === '') return;
 
     console.log(addData);
-    setLinks((prev) => [...prev, { ...addData }]);
+    setLinks((prev) => {
+      const updated_links = [
+        ...prev,
+        { ...addData, id: (links.length + 1).toString() },
+      ];
+      localStorage.setItem('saved', JSON.stringify(updated_links));
+      return updated_links;
+    });
     dialogRef.current?.close();
 
     setAddData({
@@ -43,8 +52,30 @@ function App() {
     setAddData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // const test = () => {
+  //   for (let i = 0; i < 15; i++) {
+  //     setLinks((prev) => [
+  //       ...prev,
+  //       { id: i.toString(), title: 'test', url: 'test' },
+  //     ]);
+  //   }
+  // };
+
+  const removeCard = (id: string) => {
+    setLinks((prev) => prev.filter((val) => val.id !== id));
+  };
+  useEffect(() => {
+    const local_links = localStorage.getItem('saved');
+    if (!local_links) return;
+    const previous_links = JSON.parse(local_links);
+    if (previous_links.length > 0) {
+      setLinks(previous_links);
+    }
+    // test();
+  }, []);
+
   return (
-    <div className="w-full h-screen bg-gradient-to-tr from-gray-950 to-slate-800 flex items-center justify-center flex-col gap-10 py-5 px-5">
+    <div className="w-full h-screen bg-gradient-to-tr from-gray-950 to-slate-800 flex items-center justify-center flex-col gap-10 py-10 px-5">
       <div className="flex items-center gap-4 relative">
         <h1 className="text-3xl text-white font-bold">Link Bookmark</h1>
         <div
@@ -71,63 +102,75 @@ function App() {
         <img
           src={Arrow}
           alt="arrow"
-          className="absolute w-12 invert rotate-180 -right-12 -top-8"
+          className="absolute w-12 invert right-6 rotate-[55deg] -top-10 sm:rotate-180 sm:-right-12 sm:-top-8"
         />
       </div>
-      <div className="w-full max-w-5xl h-[600px] rounded-md bg-gradient-to-br from-gray-900 to-slate-950 p-5 flex gap-4 flex-wrap overflow-y-scroll scrollbar">
-        {links.map((link, i) => {
-          let url = link.url.startsWith('http')
-            ? link.url
-            : `http://${link.url}`;
-          return <BookmarkBox key={`${i}-${link.url}`} link={link} url={url} />;
-        })}
+
+      <div className="w-full max-w-5xl h-full max-h-[600px] rounded-md bg-gradient-to-br from-gray-900 to-slate-950 p-4 md:p-5 overflow-y-scroll scrollbar">
+        <div className="flex flex-wrap gap-6">
+          {links.map((link, i) => {
+            let url = link.url.startsWith('http')
+              ? link.url
+              : `http://${link.url}`;
+            return (
+              <BookmarkBox
+                removeCard={removeCard}
+                key={`${i}-${link.url}`}
+                link={link}
+                url={url}
+              />
+            );
+          })}
+        </div>
       </div>
 
       {/* Add new link */}
       <dialog
         ref={dialogRef}
-        className="w-full max-w-[400px] rounded-lg z-[999] border-none outline-none bg-gradient-to-tr from-gray-800 to-slate-800 p-5 pb-10 relative"
+        className="w-full max-w-[400px] z-[999] border-none bg-transparent"
       >
-        <h1 className="text-white">Add New Link</h1>
+        <div className="w-full bg-gradient-to-tr from-gray-800 to-slate-800 p-5 pb-10 relative rounded-lg">
+          <h1 className="text-white">Add New Link</h1>
 
-        <div
-          onClick={() => {
-            dialogRef.current?.close();
-          }}
-          className="w-7 h-7 items-center justify-center flex rounded-full bg-white cursor-pointer absolute right-5 top-5"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-5 h-5"
+          <div
+            onClick={() => {
+              dialogRef.current?.close();
+            }}
+            className="w-7 h-7 items-center justify-center flex rounded-full bg-white cursor-pointer absolute right-5 top-5"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
 
-        <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
-          <InputField
-            title="Title"
-            placeholder="e.g Youtube"
-            onChange={onChange}
-            name="title"
-          />
-          <InputField
-            title="Url"
-            placeholder="e.g www.youtube.com"
-            onChange={onChange}
-            name="url"
-            span="(www.example.com)"
-          />
-          <button className="bg-white rounded-full py-2 mt-5">Save</button>
-        </form>
+          <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
+            <InputField
+              title="Title"
+              placeholder="e.g Youtube"
+              onChange={onChange}
+              name="title"
+            />
+            <InputField
+              title="Url"
+              placeholder="e.g www.youtube.com"
+              onChange={onChange}
+              name="url"
+              span="(www.example.com)"
+            />
+            <button className="bg-white rounded-full py-2 mt-5">Save</button>
+          </form>
+        </div>
       </dialog>
     </div>
   );

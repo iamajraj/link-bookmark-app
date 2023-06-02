@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 
 type Props = {
   title: string;
@@ -26,4 +26,4 @@ function InputField({ onChange, name, placeholder, title, span }: Props) {
   );
 }
 
-export default forwardRef(InputField);
+export default InputField;
