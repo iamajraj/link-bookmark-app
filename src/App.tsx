@@ -37,7 +37,7 @@ function App() {
         ...prev,
         { ...addData, id: (links.length + 1).toString() },
       ];
-      localStorage.setItem('saved', JSON.stringify(updated_links));
+      setDataLocally(updated_links);
       return updated_links;
     });
     dialogRef.current?.close();
@@ -46,6 +46,10 @@ function App() {
       title: '',
       url: '',
     });
+  };
+
+  const setDataLocally = (data: LinkType[]) => {
+    localStorage.setItem('saved', JSON.stringify(data));
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +66,11 @@ function App() {
   // };
 
   const removeCard = (id: string) => {
-    setLinks((prev) => prev.filter((val) => val.id !== id));
+    setLinks((prev) => {
+      const updated_links = prev.filter((val) => val.id !== id);
+      setDataLocally(updated_links);
+      return updated_links;
+    });
   };
   useEffect(() => {
     const local_links = localStorage.getItem('saved');
