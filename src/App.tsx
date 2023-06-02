@@ -76,7 +76,8 @@ function App() {
     const local_links = localStorage.getItem('saved');
     if (!local_links) return;
     const previous_links = JSON.parse(local_links);
-    if (previous_links.length > 0) {
+    if (!previous_links) return;
+    if (Array.isArray(previous_links)) {
       setLinks(previous_links);
     }
     // test();
