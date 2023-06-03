@@ -105,15 +105,15 @@ function Main() {
     await deleteDoc(doc(db, 'users', user.user.uid, 'links', id));
   };
 
-  useEffect(() => {
-    const local_links = localStorage.getItem('saved');
-    if (!local_links) return;
-    const previous_links = JSON.parse(local_links);
-    if (!previous_links) return;
-    if (Array.isArray(previous_links)) {
-      setLinks(previous_links);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const local_links = localStorage.getItem('saved');
+  //   if (!local_links) return;
+  //   const previous_links = JSON.parse(local_links);
+  //   if (!previous_links) return;
+  //   if (Array.isArray(previous_links)) {
+  //     setLinks(previous_links);
+  //   }
+  // }, []);
 
   return (
     <div className="w-full h-screen bg-gradient-to-tr from-gray-950 to-slate-800 flex items-center justify-center flex-col gap-10 py-10 px-5">
