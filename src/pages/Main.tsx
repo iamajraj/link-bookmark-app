@@ -183,7 +183,7 @@ function Main() {
           {loading ? (
             <p className="text-white">Loading...</p>
           ) : (
-            links.map((link, i) => {
+            links?.map((link, i) => {
               let url = link.url.startsWith('http')
                 ? link.url
                 : `http://${link.url}`;
