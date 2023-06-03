@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import Arrow from '../assets/arrow.png';
+import Empty from '../assets/empty.svg';
 import InputField from '../components/InputField';
 import BookmarkBox from '../components/BookmarkBox';
 import { userState } from '../context/userState';
@@ -24,7 +25,7 @@ function Main() {
   const [user, setUser] = useRecoilState(userState);
   const [links, setLinks] = useState<LinkType[] | null>();
   const [adding, setAdding] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [addData, setAddData] = useState({
     title: '',
     url: '',
@@ -182,7 +183,7 @@ function Main() {
         <div className="flex flex-wrap gap-6">
           {loading ? (
             <p className="text-white">Loading...</p>
-          ) : (
+          ) : links?.length > 0 ? (
             links?.map((link, i) => {
               let url = link.url.startsWith('http')
                 ? link.url
@@ -196,6 +197,18 @@ function Main() {
                 />
               );
             })
+          ) : (
+            <h1 className="text-white">
+              Empty links !{' '}
+              <span
+                className="font-semibold cursor-pointer underline"
+                onClick={() => {
+                  dialogRef.current.showModal();
+                }}
+              >
+                Add one
+              </span>
+            </h1>
           )}
         </div>
       </div>
