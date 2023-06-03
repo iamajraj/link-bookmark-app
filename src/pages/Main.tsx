@@ -1,12 +1,14 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import Arrow from '../assets/arrow.png';
-import Empty from '../assets/empty.svg';
 import InputField from '../components/InputField';
 import BookmarkBox from '../components/BookmarkBox';
+import Skeleton from 'react-loading-skeleton';
+import { SkeletonTheme } from 'react-loading-skeleton';
 import { userState } from '../context/userState';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../service/firebase';
+import 'react-loading-skeleton/dist/skeleton.css';
 import {
   onSnapshot,
   collection,
@@ -149,40 +151,63 @@ function Main() {
             className="absolute w-12 invert right-6 rotate-[55deg] -top-10 sm:rotate-180 sm:-right-12 sm:-top-8"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <img
-            src={user.user.photoUrl}
-            alt=""
-            className="w-8 h-8 rounded-full object-cover cursor-pointer"
-          />
-          <div>
-            <p className="text-white text-[13px]">{user.user.displayName}</p>
-            <p className="text-white text-[13px]">{user.user.email}</p>
+        <SkeletonTheme baseColor="#F1EFF120" highlightColor="#F1EFF105">
+          <div className="flex items-center gap-2">
+            {user.user.photoUrl ? (
+              <img
+                src={user.user.photoUrl}
+                alt=""
+                className="w-8 h-8 rounded-full object-cover cursor-pointer"
+              />
+            ) : (
+              <Skeleton
+                className="min-w-[34px] min-h-[34px]"
+                borderRadius={50}
+              />
+            )}
+            <div>
+              <p className="text-white text-[13px]">
+                {user.user.displayName || (
+                  <Skeleton className="min-w-[80px] rounded-none" />
+                )}
+              </p>
+              <p className="text-white text-[13px]">
+                {user.user.email || <Skeleton className="rounded-none" />}
+              </p>
+            </div>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6 stroke-white cursor-pointer"
+              onClick={async () => {
+                await signOut(auth);
+              }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+              />
+            </svg>
           </div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6 stroke-white cursor-pointer"
-            onClick={async () => {
-              await signOut(auth);
-            }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-            />
-          </svg>
-        </div>
+        </SkeletonTheme>
       </div>
 
       <div className="w-full max-w-5xl h-full max-h-[600px] rounded-md bg-gradient-to-br from-gray-900 to-slate-950 p-4 md:p-5 overflow-y-scroll scrollbar">
         <div className="flex flex-wrap gap-6">
           {loading ? (
-            <p className="text-white">Loading...</p>
+            // <p className="text-white">Loading...</p>
+            <Skeleton
+              className="min-w-[120px] min-h-[70px]"
+              baseColor="#F1EFF120"
+              highlightColor="#F1EFF105"
+              count={4}
+              containerClassName="flex gap-6"
+            />
           ) : links?.length > 0 ? (
             links?.map((link, i) => {
               let url = link.url.startsWith('http')
