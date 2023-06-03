@@ -14,24 +14,15 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 
-const initialLink = [
-  {
-    id: '1',
-    title: 'Youtube',
-    url: 'www.youtube.com',
-  },
-  {
-    id: '2',
-    title: 'Google',
-    url: 'www.google.com',
-  },
-];
-
-export type LinkType = (typeof initialLink)[0];
+export type LinkType = {
+  id: string;
+  title: string;
+  url: string;
+};
 
 function Main() {
   const [user, setUser] = useRecoilState(userState);
-  const [links, setLinks] = useState(initialLink);
+  const [links, setLinks] = useState<LinkType[] | null>();
   const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addData, setAddData] = useState({
