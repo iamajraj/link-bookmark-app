@@ -2,4 +2,6 @@
 
 An app which lets users save the websites URL as a bookmark, created using NextJS and Firebase
 
-### was intended to do something else but end up making this
+#
+
+![](https://github.com/iamajraj/link-bookmark-app/blob/main/Screenshot_7.png?raw=true)
